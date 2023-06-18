@@ -20,7 +20,7 @@ function quizContent(): void | undefined {
 useEffect(() => {
   fetch('https://opentdb.com/api.php?amount=5')
   .then(res => res.json())
-  .then(data => console.log(data))
+  .then(data => setAllQuizData(data))
 }, [])
 
 
@@ -28,7 +28,7 @@ useEffect(() => {
     <>
       <div>
         {frontPage && <FrontPage quizContent={quizContent}/>}
-        {frontPage !== true && <Quiz />}
+        {frontPage !== true && <Quiz quizData={allQuizData}/>}
       </div>
     </>
   )

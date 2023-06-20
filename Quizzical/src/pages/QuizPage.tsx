@@ -1,4 +1,5 @@
 import { QuizResponse } from "../App";
+import Button from "../components/Button";
 
 type Props = {
   onNextPage: () => void;
@@ -20,7 +21,7 @@ export default function QuizPage({ onNextPage }: Props) {
         <h1>content</h1>
         {/* {questions} */}
       </div>
-      <button onClick={onNextPage}>Check Answers</button>
+      <Button onClick={onNextPage}>Check Answers</Button>
     </>
   );
 }

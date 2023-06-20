@@ -1,0 +1,7 @@
+.button {
+  all: unset;
+  background-color: #4d5b9e;
+  color: #f5f7fb;
+  padding: 12px;
+  border-radius: 5px;
+}

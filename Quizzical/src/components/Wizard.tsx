@@ -3,7 +3,7 @@ import FrontPage from "../pages/FrontPage";
 import QuizPage from "../pages/QuizPage";
 
 export default function Wizard() {
-  const [step, setStep] = useState(0);
+  const [step, setStep] = useState(1);
 
   function onNextPage() {
     if (step === 1) {

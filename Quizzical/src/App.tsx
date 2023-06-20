@@ -4,10 +4,19 @@ import './App.css'
 import FrontPage from './FrontPage'
 import Quiz from './Quiz'
 
+
+export type QuizResponse = {
+  category: string,
+  correct_answer: string,
+  difficulty: string,
+  incorrect_answers: Array<string>
+  question: string,
+  type: string
+}
+
 function App() {
 const [frontPage, setFrontPage] = useState(true)
-const [allQuizData, setAllQuizData] = useState({})
-
+const [allQuizData, setAllQuizData] = useState<QuizResponse[]>([])
 function quizContent(): void | undefined {
   if (frontPage !== true) {
     return
@@ -20,7 +29,7 @@ function quizContent(): void | undefined {
 useEffect(() => {
   fetch('https://opentdb.com/api.php?amount=5')
   .then(res => res.json())
-  .then(data => setAllQuizData(data))
+  .then(data => setAllQuizData(data.results))
 }, [])
 
 

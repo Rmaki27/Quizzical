@@ -1,4 +1,5 @@
 import { QuizResponse } from "../App";
+import { useState } from "react";
 import Button from "../components/Button";
 import QuestionBlock from "../components/QuestionBlock";
 
@@ -7,15 +8,6 @@ type Props = {
 };
 
 export default function QuizPage({ onNextPage }: Props) {
-  // const questions = quizData.map((currentItem) => {
-  //   return (
-  //     <div>
-  //       <h2>{currentItem.question}</h2>
-  //       <p>{currentItem.incorrect_answers}</p>
-  //     </div>
-  //   );
-  // });
-
   return (
     <>
       <QuestionBlock

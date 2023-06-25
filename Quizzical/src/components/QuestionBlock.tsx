@@ -8,7 +8,6 @@ type Props = {
 
 export default function QuestionBlock({ options, question }: Props) {
   const [selectedAnswer, setSelectedAnswer] = useState<string>();
-  console.log("selected Answer index = ", selectedAnswer);
 
   return (
     <>

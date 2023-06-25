@@ -1,4 +1,3 @@
-import { QuizResponse } from "../App";
 import { useEffect, useState } from "react";
 import Button from "../components/Button";
 import QuestionBlock from "../components/QuestionBlock";
@@ -15,15 +14,32 @@ type QuizResponse = {
   incorrect_answers: Array<string>;
   question: string;
   type: string;
+  options: Array<string>;
 };
 
 export default function QuizPage({ onNextPage }: Props) {
   const [allQuizData, setAllQuizData] = useState<QuizResponse[]>();
-
+  console.log(allQuizData);
   useEffect(() => {
     fetch("https://opentdb.com/api.php?amount=5")
       .then((res) => res.json())
-      .then((data) => setAllQuizData(data.results));
+      .then((data: Record<string, unknown> & { results: QuizResponse[] }) =>
+        setAllQuizData(() => {
+          console.log(data.results);
+          const newData = data.results.map((question: QuizResponse) => {
+            const index = Math.floor(Math.random() * 3 + 1);
+            const options = [...question.incorrect_answers];
+            options.splice(index, 0, question.correct_answer);
+            const result: QuizResponse = {
+              ...question,
+              options: options,
+            };
+            return result;
+          });
+          console.log("New data: ", newData);
+          return newData;
+        })
+      );
   }, []);
 
   return (
@@ -33,7 +49,7 @@ export default function QuizPage({ onNextPage }: Props) {
           return (
             <QuestionBlock
               question={decode(currentQuestion.question)}
-              options={currentQuestion.incorrect_answers}
+              options={currentQuestion.options}
             />
           );
         })}

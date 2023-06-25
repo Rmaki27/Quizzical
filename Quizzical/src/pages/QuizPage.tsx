@@ -2,6 +2,7 @@ import { QuizResponse } from "../App";
 import { useEffect, useState } from "react";
 import Button from "../components/Button";
 import QuestionBlock from "../components/QuestionBlock";
+import { decode } from "html-entities";
 
 type Props = {
   onNextPage: () => void;
@@ -18,7 +19,6 @@ type QuizResponse = {
 
 export default function QuizPage({ onNextPage }: Props) {
   const [allQuizData, setAllQuizData] = useState<QuizResponse[]>();
-  // console.log("quiz data: ", allQuizData);
 
   useEffect(() => {
     fetch("https://opentdb.com/api.php?amount=5")
@@ -29,18 +29,14 @@ export default function QuizPage({ onNextPage }: Props) {
   return (
     <>
       {allQuizData &&
-        allQuizData.map((currentQuestion, index) => {
+        allQuizData.map((currentQuestion) => {
           return (
             <QuestionBlock
-              question={currentQuestion.question}
+              question={decode(currentQuestion.question)}
               options={currentQuestion.incorrect_answers}
             />
           );
         })}
-      {/* <QuestionBlock
-        question="what's the bird?"
-        options={["pigeon", "parakeet", "doves"]}
-      /> */}
       <Button onClick={onNextPage}>Check Answers</Button>
     </>
   );

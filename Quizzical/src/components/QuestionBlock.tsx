@@ -1,14 +1,20 @@
-import { useState } from "react";
 import Button from "./Button";
 
 type Props = {
   question: string;
+  questionIndex: number;
   options: string[];
+  selectedAnswer: string;
+  onAnswerSelect: (option: string) => void;
 };
 
-export default function QuestionBlock({ options, question }: Props) {
-  const [selectedAnswer, setSelectedAnswer] = useState<string>();
-
+export default function QuestionBlock({
+  options,
+  question,
+  selectedAnswer,
+  onAnswerSelect,
+  questionIndex,
+}: Props) {
   return (
     <>
       <p>{question}</p>
@@ -16,7 +22,7 @@ export default function QuestionBlock({ options, question }: Props) {
         {options.map((option) => (
           <Button
             key={option}
-            onClick={() => setSelectedAnswer(option)}
+            onClick={() => onAnswerSelect(option, questionIndex)}
             type={selectedAnswer === option ? "selected" : "unselected"}
           >
             {option}

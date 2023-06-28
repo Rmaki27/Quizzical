@@ -19,13 +19,28 @@ type QuizResponse = {
 
 export default function QuizPage({ onNextPage }: Props) {
   const [allQuizData, setAllQuizData] = useState<QuizResponse[]>();
-  console.log(allQuizData);
+  const [selectedAnswers, setSelectedAnswers] = useState<string[]>(
+    Array(5).fill("")
+  );
+
+  console.log(selectedAnswers);
+
+  function onAnswerSelect(option: string, questionIndex: number) {
+    setSelectedAnswers(() => {
+      return selectedAnswers.map((answer, index) => {
+        if (index === questionIndex) {
+          return option;
+        }
+        return answer;
+      });
+    });
+  }
+
   useEffect(() => {
     fetch("https://opentdb.com/api.php?amount=5")
       .then((res) => res.json())
       .then((data: Record<string, unknown> & { results: QuizResponse[] }) =>
         setAllQuizData(() => {
-          console.log(data.results);
           const newData = data.results.map((question: QuizResponse) => {
             const index = Math.floor(Math.random() * 3 + 1);
             const options = [...question.incorrect_answers];
@@ -36,7 +51,6 @@ export default function QuizPage({ onNextPage }: Props) {
             };
             return result;
           });
-          console.log("New data: ", newData);
           return newData;
         })
       );
@@ -45,15 +59,24 @@ export default function QuizPage({ onNextPage }: Props) {
   return (
     <>
       {allQuizData &&
-        allQuizData.map((currentQuestion) => {
+        allQuizData.map((currentQuestion, index) => {
           return (
             <QuestionBlock
               question={decode(currentQuestion.question)}
+              questionIndex={index}
               options={currentQuestion.options}
+              selectedAnswer={selectedAnswers[index]}
+              onAnswerSelect={onAnswerSelect}
             />
           );
         })}
-      <Button onClick={onNextPage}>Check Answers</Button>
+      <Button
+        onClick={() => {
+          onNextPage;
+        }}
+      >
+        Check Answers
+      </Button>
     </>
   );
 }

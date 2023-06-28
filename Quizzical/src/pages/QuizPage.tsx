@@ -24,7 +24,7 @@ export default function QuizPage({ onNextPage }: Props) {
   );
   const [answersSubmitted, setAnswersSubmitted] = useState<boolean>(false);
 
-  console.log(selectedAnswers);
+  console.log("answers submitted state: ", answersSubmitted);
 
   function onAnswerSelect(option: string, questionIndex: number) {
     setSelectedAnswers(() => {
@@ -57,6 +57,13 @@ export default function QuizPage({ onNextPage }: Props) {
       );
   }, []);
 
+  function onSubmitAnswers() {
+    console.log("running onSubmit Answers");
+    setAnswersSubmitted(() => {
+      return selectedAnswers.every((answer) => answer !== "");
+    });
+  }
+
   return (
     <>
       {allQuizData &&
@@ -73,7 +80,13 @@ export default function QuizPage({ onNextPage }: Props) {
         })}
       <Button
         onClick={() => {
-          onNextPage;
+          onSubmitAnswers();
+          if (answersSubmitted) {
+            console.log("all answers submitted");
+            onNextPage;
+          } else {
+            console.log("Must select all answers");
+          }
         }}
       >
         Check Answers

@@ -22,16 +22,17 @@ export default function QuizPage({ onNextPage }: Props) {
   const [selectedAnswers, setSelectedAnswers] = useState<string[]>(
     Array(5).fill("")
   );
+  const [answersSubmitted, setAnswersSubmitted] = useState<boolean>(false);
 
   console.log(selectedAnswers);
 
   function onAnswerSelect(option: string, questionIndex: number) {
     setSelectedAnswers(() => {
-      return selectedAnswers.map((answer, index) => {
+      return selectedAnswers.map((previousAnswer, index) => {
         if (index === questionIndex) {
           return option;
         }
-        return answer;
+        return previousAnswer;
       });
     });
   }

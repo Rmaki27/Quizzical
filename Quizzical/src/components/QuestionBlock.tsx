@@ -5,7 +5,7 @@ type Props = {
   questionIndex: number;
   options: string[];
   selectedAnswer: string;
-  onAnswerSelect: (option: string) => void;
+  onAnswerSelect: (option: string, questionIndex: number) => void;
 };
 
 export default function QuestionBlock({

@@ -19,17 +19,17 @@ export default function QuestionBlock({
   isFormComplete,
   correctAnswer,
 }: Props) {
-  function setType(selectedAnswer: string | undefined, option: string) {
+  function setType(answer: string | undefined, option: string) {
     if (isFormComplete) {
-      if (selectedAnswer === correctAnswer) {
+      if (option === correctAnswer) {
         return "correct";
-      } else if (selectedAnswer !== correctAnswer) {
+      } else if (option === answer && answer !== correctAnswer) {
         return "selected-incorrect";
       } else {
         return "unselected-incorrect";
       }
     } else {
-      if (selectedAnswer === option) {
+      if (answer === option) {
         return "selected";
       } else {
         return "unselected";

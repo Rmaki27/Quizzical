@@ -3,7 +3,13 @@ import "./Button.css";
 type Props = {
   children: string;
   onClick?: React.MouseEventHandler<HTMLButtonElement>;
-  type?: "primary" | "selected" | "unselected";
+  type?:
+    | "primary"
+    | "selected"
+    | "unselected"
+    | "correct"
+    | "selected-incorrect"
+    | "unselected-incorrect";
 };
 
 export default function Button({ children, onClick, type = "primary" }: Props) {

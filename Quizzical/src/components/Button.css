@@ -17,3 +17,21 @@
   background-color: none;
   border: solid 1px black;
 }
+
+.button-selected-incorrect {
+  background-color: #f8bcbc;
+  color: #000000;
+  border: solid 1px #000000;
+}
+
+.button-unselected-incorrect {
+  background-color: none;
+  color: #000000;
+  border: solid 1px #000000;
+}
+
+.button-correct {
+  background-color: #94d7a2;
+  color: #293264;
+  border: none;
+}

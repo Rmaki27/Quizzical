@@ -4,8 +4,10 @@ type Props = {
   question: string;
   questionIndex: number;
   options: string[];
-  selectedAnswer: string;
+  selectedAnswer?: string;
   onAnswerSelect: (option: string, questionIndex: number) => void;
+  isFormComplete: boolean;
+  correctAnswer: string;
 };
 
 export default function QuestionBlock({
@@ -14,7 +16,27 @@ export default function QuestionBlock({
   selectedAnswer,
   onAnswerSelect,
   questionIndex,
+  isFormComplete,
+  correctAnswer,
 }: Props) {
+  function setType(selectedAnswer: string | undefined, option: string) {
+    if (isFormComplete) {
+      if (selectedAnswer === correctAnswer) {
+        return "correct";
+      } else if (selectedAnswer !== correctAnswer) {
+        return "selected-incorrect";
+      } else {
+        return "unselected-incorrect";
+      }
+    } else {
+      if (selectedAnswer === option) {
+        return "selected";
+      } else {
+        return "unselected";
+      }
+    }
+  }
+
   return (
     <>
       <p>{question}</p>
@@ -22,8 +44,12 @@ export default function QuestionBlock({
         {options.map((option) => (
           <Button
             key={option}
-            onClick={() => onAnswerSelect(option, questionIndex)}
-            type={selectedAnswer === option ? "selected" : "unselected"}
+            onClick={() => {
+              if (isFormComplete === false) {
+                onAnswerSelect(option, questionIndex);
+              }
+            }}
+            type={setType(selectedAnswer, option)}
           >
             {option}
           </Button>

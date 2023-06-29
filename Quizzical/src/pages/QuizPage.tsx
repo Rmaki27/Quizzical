@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Button from "../components/Button";
 import QuestionBlock from "../components/QuestionBlock";
 import { decode } from "html-entities";
@@ -19,12 +19,12 @@ type QuizResponse = {
 
 export default function QuizPage({ onNextPage }: Props) {
   const [allQuizData, setAllQuizData] = useState<QuizResponse[]>();
-  const [selectedAnswers, setSelectedAnswers] = useState<string[]>(
-    Array(5).fill("")
-  );
-  const [answersSubmitted, setAnswersSubmitted] = useState<boolean>(false);
+  const [selectedAnswers, setSelectedAnswers] = useState<
+    (string | undefined)[]
+  >(Array(5).fill(undefined));
+  const [isFormComplete, setIsFormComplete] = useState<boolean>(false);
 
-  console.log("answers submitted state: ", answersSubmitted);
+  console.log(allQuizData);
 
   function onAnswerSelect(option: string, questionIndex: number) {
     setSelectedAnswers(() => {
@@ -36,6 +36,16 @@ export default function QuizPage({ onNextPage }: Props) {
       });
     });
   }
+
+  const validateSelectedAnswers = useCallback(() => {
+    setIsFormComplete(() => {
+      return selectedAnswers.every((answer) => answer !== undefined);
+    });
+  }, [selectedAnswers]);
+
+  useEffect(() => {
+    validateSelectedAnswers();
+  }, [selectedAnswers, validateSelectedAnswers]);
 
   useEffect(() => {
     fetch("https://opentdb.com/api.php?amount=5")
@@ -57,13 +67,6 @@ export default function QuizPage({ onNextPage }: Props) {
       );
   }, []);
 
-  function onSubmitAnswers() {
-    console.log("running onSubmit Answers");
-    setAnswersSubmitted(() => {
-      return selectedAnswers.every((answer) => answer !== "");
-    });
-  }
-
   return (
     <>
       {allQuizData &&
@@ -75,17 +78,18 @@ export default function QuizPage({ onNextPage }: Props) {
               options={currentQuestion.options}
               selectedAnswer={selectedAnswers[index]}
               onAnswerSelect={onAnswerSelect}
+              isFormComplete={isFormComplete}
+              correctAnswer={currentQuestion.correct_answer}
             />
           );
         })}
       <Button
         onClick={() => {
-          onSubmitAnswers();
-          if (answersSubmitted) {
-            console.log("all answers submitted");
+          if (isFormComplete) {
+            console.log("all answers submitted", selectedAnswers);
             onNextPage;
           } else {
-            console.log("Must select all answers");
+            console.log("Must select all answers", selectedAnswers);
           }
         }}
       >

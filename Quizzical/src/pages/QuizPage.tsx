@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Button from "../components/Button";
 import QuestionBlock from "../components/QuestionBlock";
 import { decode } from "html-entities";
@@ -37,17 +37,28 @@ export default function QuizPage({ onNextPage }: Props) {
   }
 
   function validateSelectedAnswers() {
-    setIsFormComplete(() => {
-      return selectedAnswers.every((answer) => answer !== undefined);
+    const isFormCompleteNew = selectedAnswers.every(
+      (answer) => answer !== undefined
+    );
+    if (isFormCompleteNew) {
+      gradeQuiz();
+    }
+    setIsFormComplete(isFormCompleteNew);
+  }
+
+  function gradeQuiz() {
+    setGradedAnswers(() => {
+      const booleanGrades = allQuizData?.filter((question, index) => {
+        if (question.correct_answer === selectedAnswers[index]) {
+          return true;
+        } else {
+          return false;
+        }
+      });
+      return booleanGrades?.length;
     });
   }
 
-  // function gradeQuiz() {
-  //   setGradedAnswers(allQuizData?.map(
-  //     selectedAnswers.
-  //   ))
-  // }
-
   useEffect(() => {
     fetch("https://opentdb.com/api.php?amount=5")
       .then((res) => res.json())
@@ -67,47 +78,6 @@ export default function QuizPage({ onNextPage }: Props) {
         })
       );
   }, []);
-
-  useEffect(() => {
-    fetch("https://opentdb.com/api.php?amount=5")
-      .then((res) => res.json())
-      .then((data: Record<string, unknown> & { results: QuizResponse[] }) =>
-        setAllQuizData(() => {
-          const newData = data.results.map((question: QuizResponse) => {
-            const index = Math.floor(Math.random() * 3 + 1);
-            const options = [...question.incorrect_answers];
-            options.splice(index, 0, question.correct_answer);
-            const result: QuizResponse = {
-              ...question,
-              options: options,
-            };
-            return result;
-          });
-          return newData;
-        })
-      );
-  }, []);
-
-  function primaryButton() {
-    if (isFormComplete) {
-      return (
-        <div>
-          <p>{`You scored ____ correct answers`}</p>
-          <Button
-            onClick={() => {
-              onNextPage();
-            }}
-          >
-            Play Again
-          </Button>
-        </div>
-      );
-    } else {
-      return (
-        <Button onClick={() => validateSelectedAnswers()}>Check Answers</Button>
-      );
-    }
-  }
 
   return (
     <>
@@ -126,7 +96,20 @@ export default function QuizPage({ onNextPage }: Props) {
           );
         })}
 
-      {primaryButton()}
+      {isFormComplete ? (
+        <div>
+          <p>{`You scored ${gradedAnswers} correct answers`}</p>
+          <Button
+            onClick={() => {
+              onNextPage();
+            }}
+          >
+            Play Again
+          </Button>
+        </div>
+      ) : (
+        <Button onClick={() => validateSelectedAnswers()}>Check Answers</Button>
+      )}
     </>
   );
 }

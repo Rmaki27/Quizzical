@@ -1,4 +1,4 @@
-import { ReactNode, useState } from "react";
+import { useState } from "react";
 import FrontPage from "../pages/FrontPage";
 import QuizPage from "../pages/QuizPage";
 
